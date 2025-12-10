@@ -6,25 +6,23 @@ on:
 
 jobs:
   build-and-deploy:
-    # IMPORTANTE: Esto le dice a GitHub que use tu PC (donde instalaste el runner)
-    # en lugar de los servidores de la nube.
     runs-on: self-hosted
 
+    # ESTO ES LA SOLUCIÓN MÁGICA PARA WINDOWS:
+    # Le decimos que use "bash" (Git Bash) para todos los pasos
+    defaults:
+      run:
+        shell: bash
+
     steps:
-    # 1. Descargar el código más reciente del repositorio en tu PC
     - uses: actions/checkout@v3
 
-    # 2. Instalar dependencias del microservicio
-    # Se ha corregido el espacio después de "run:" que daba error antes
     - name: Install Dependencies
-    
+      # Como usamos bash, el "&&" funcionará perfecto
       run: cd app && npm install
 
-    # 3. Ejecutar el script de despliegue Blue/Green
-    # Al ser self-hosted, no necesitamos SSH; el script corre directo en tu máquina.
     - name: Deploy Blue/Green Strategy
       run: |
-        # Aseguramos que el script tenga permisos de ejecución
-        chmod +x scripts/deploy.sh
-        # Ejecutamos el script que orquesta Docker y Nginx
-        bash scripts/deploy.sh
+        # Ya no necesitamos chmod en Windows, lo quitamos.
+        # Ejecutamos el script directamente
+        ./scripts/deploy.sh

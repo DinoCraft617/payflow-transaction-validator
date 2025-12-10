@@ -73,7 +73,7 @@ app.get('/metrics', async (req, res) => {
 
 // Endpoint de Salud (Vital para el Blue/Green)
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'UP' });
+    res.status(500).json({ status: 'ERROR CRITICO SIMULADO' }); // <--- EL CAMBIO
 });
 
 app.listen(port, () => {

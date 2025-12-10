@@ -6,34 +6,25 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
-    
+    # IMPORTANTE: Esto le dice a GitHub que use tu PC (donde instalaste el runner)
+    # en lugar de los servidores de la nube.
+    runs-on: self-hosted
+
     steps:
+    # 1. Descargar el código más reciente del repositorio en tu PC
     - uses: actions/checkout@v3
-    
-    # 1. Pruebas y Build (Simulado)
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
-        
-    # El guion (-) indica un nuevo paso
+
+    # 2. Instalar dependencias del microservicio
+    # Se ha corregido el espacio después de "run:" que daba error antes
     - name: Install Dependencies
-      # Asegúrate de que 'run' esté alineado con 'name'
-      # Y MUY IMPORTANTE: El espacio después de "run:"
+    
       run: cd app && npm install
 
-    # 2. Construcción de Docker (Si usaras un registry real)
-    # Aquí simulamos el despliegue directo conectando por SSH
-    
-    # 3. Despliegue al Servidor
-    - name: Deploy to Production
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          cd /ruta/a/tu/proyecto/payflow-transaction-validator
-          # Ejecutar el script que está en la carpeta scripts/
-          bash scripts/deploy.sh
+    # 3. Ejecutar el script de despliegue Blue/Green
+    # Al ser self-hosted, no necesitamos SSH; el script corre directo en tu máquina.
+    - name: Deploy Blue/Green Strategy
+      run: |
+        # Aseguramos que el script tenga permisos de ejecución
+        chmod +x scripts/deploy.sh
+        # Ejecutamos el script que orquesta Docker y Nginx
+        bash scripts/deploy.sh

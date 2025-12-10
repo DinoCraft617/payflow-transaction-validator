@@ -1,0 +1,14 @@
+{
+  "name": "transaction-validator",
+  "version": "1.0.0",
+  "description": "Microservicio critico de PayFlow MX",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "prom-client": "^14.2.0"
+  }
+}

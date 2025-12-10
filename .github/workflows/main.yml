@@ -8,21 +8,15 @@ jobs:
   build-and-deploy:
     runs-on: self-hosted
 
-    # ESTO ES LA SOLUCIÓN MÁGICA PARA WINDOWS:
-    # Le decimos que use "bash" (Git Bash) para todos los pasos
-    defaults:
-      run:
-        shell: bash
-
+    # 1. ELIMINAMOS la sección "defaults: shell: bash" 
     steps:
     - uses: actions/checkout@v3
 
+    # 2. CORRECCIÓN: Instalación segura
     - name: Install Dependencies
-      # Como usamos bash, el "&&" funcionará perfecto
-      run: cd app && npm install
+      working-directory: ./app
+      run: npm install
 
+    # 3. CORRECCIÓN: Despliegue explícito
     - name: Deploy Blue/Green Strategy
-      run: |
-        # Ya no necesitamos chmod en Windows, lo quitamos.
-        # Ejecutamos el script directamente
-        ./scripts/deploy.sh
+      run: bash scripts/deploy.sh

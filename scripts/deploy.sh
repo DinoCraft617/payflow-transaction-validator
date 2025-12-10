@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# --- CORRECCIÓN DE RUTAS AQUI ---
-# Buscamos en nginx/nginx.conf, no en la raíz
+
 CURRENT_COLOR=$(grep "server app-blue" nginx/nginx.conf > /dev/null && echo "blue" || echo "green")
 
 if [ "$CURRENT_COLOR" == "blue" ]; then

@@ -1,0 +1,39 @@
+name: CI/CD Pipeline PayFlow
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    # 1. Pruebas y Build (Simulado)
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        
+    # El guion (-) indica un nuevo paso
+    - name: Install Dependencies
+      # Asegúrate de que 'run' esté alineado con 'name'
+      # Y MUY IMPORTANTE: El espacio después de "run:"
+      run: cd app && npm install
+
+    # 2. Construcción de Docker (Si usaras un registry real)
+    # Aquí simulamos el despliegue directo conectando por SSH
+    
+    # 3. Despliegue al Servidor
+    - name: Deploy to Production
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /ruta/a/tu/proyecto/payflow-transaction-validator
+          # Ejecutar el script que está en la carpeta scripts/
+          bash scripts/deploy.sh
